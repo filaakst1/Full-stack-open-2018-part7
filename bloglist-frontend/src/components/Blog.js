@@ -27,8 +27,8 @@ class Blog extends React.Component {
 
     return (
       <div style={blogStyle}>
-        <div 
-          onClick={() => this.setState({ visible: !this.state.visible })} 
+        <div
+          onClick={() => this.setState({ visible: !this.state.visible })}
           className='name'
         >
           {blog.title} {blog.author}
@@ -45,7 +45,7 @@ class Blog extends React.Component {
           </div>
           {deletable && <div><button onClick={remove}>delete</button></div>}
         </div>
-      </div>  
+      </div>
     )
   }
 }

@@ -157,22 +157,20 @@ class App extends React.Component {
 
     const byLikes = (b1, b2) => b2.likes - b1.likes
 
-    const countBlogs = (username, blogs = []) => {
-      return blogs.filter(blog => blog.user.username === username).reduce((accumulator) => accumulator+1, 0)
+    const getUserBlogs = (username, blogs = []) => {
+      return blogs.filter(blog => blog.user.username === username)
     }
-    const usersAndAmountsOfBlogs =(users, blogs ) => {
-      console.log('users', users)
-      console.log('blogs', blogs)
+    const usersAndBlogsToMap = ( users, blogs ) => {
       return users
         .map(user => {
           return {
             user: user,
-            blogs: countBlogs( user.username, blogs)
+            blogs: getUserBlogs( user.username, blogs)
           }
         })
     }
     const blogsInOrder = this.state.blogs.sort(byLikes)
-    const userBlogMap = usersAndAmountsOfBlogs(this.state.users, this.state.blogs)
+    const userBlogMap = usersAndBlogsToMap(this.state.users, this.state.blogs)
     return (
       <div>
         <Router>
@@ -212,12 +210,29 @@ class App extends React.Component {
                   <table id='userTable' >
                     <thead><tr><th></th><th>blogs added</th></tr></thead>
                     <tbody>
-                      { userBlogMap.map(item => <tr key={item.user.username}><td><NavLink  exact to={`/users/${item.user._id}`} >{item.user.name !== undefined? item.user.name: item.user.username}</NavLink></td><td>{item.blogs}</td></tr>) }
+                      { userBlogMap.map(item => <tr key={item.user.username}><td><NavLink  exact to={`/users/${item.user._id}`} >{item.user.name !== undefined? item.user.name: item.user.username}</NavLink></td><td>{item.blogs.length}</td></tr>) }
                     </tbody>
                   </table>
                 </div>
               )
             }} />
+            <Route exact path="/users/:id" render={({ match }) => {
+              const userId = match.params.id
+              const entry = userBlogMap.find(entry => entry.user._id === userId)
+              if(entry === null || entry === undefined) {
+                return null
+              }
+              return (
+                <div>
+                  <h2>{entry.user.name}</h2>
+                  <h3>Added blogs</h3>
+                  <ul>
+                    {entry.blogs.map(blog => <li key={blog._id}>{blog.title} by {blog.author}</li>)}
+                  </ul>
+                </div>
+              )
+            }}
+            />
           </div>
         </Router>
       </div>

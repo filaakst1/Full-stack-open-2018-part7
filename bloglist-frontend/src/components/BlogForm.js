@@ -30,7 +30,7 @@ const BlogForm = ({ title, author, url, handleChange, handleSubmit }) => {
             name='url'
             onChange={handleChange}
           />
-        </div>        
+        </div>
 
         <button type="submit">Luo</button>
       </form>
