@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
@@ -191,7 +191,7 @@ class App extends React.Component {
               />
             </Togglable>
 
-            <h2>blogs</h2>
+            <h2>blog app</h2>
             <Route exact path='/' render={() => {
               return (
                 blogsInOrder.map(blog =>
@@ -212,7 +212,7 @@ class App extends React.Component {
                   <table id='userTable' >
                     <thead><tr><th></th><th>blogs added</th></tr></thead>
                     <tbody>
-                      { userBlogMap.map(item => <tr key={item.user.username}><td>{item.user.name !== undefined? item.user.name: item.user.username}</td><td>{item.blogs}</td></tr>) }
+                      { userBlogMap.map(item => <tr key={item.user.username}><td><NavLink  exact to={`/users/${item.user._id}`} >{item.user.name !== undefined? item.user.name: item.user.username}</NavLink></td><td>{item.blogs}</td></tr>) }
                     </tbody>
                   </table>
                 </div>
@@ -224,5 +224,4 @@ class App extends React.Component {
     )
   }
 }
-
 export default App
