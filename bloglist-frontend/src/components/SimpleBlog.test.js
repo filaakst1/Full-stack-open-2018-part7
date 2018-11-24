@@ -1,46 +1,30 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import SimpleBlog from './SimpleBlog'
-
+import SipleBlog from './SimpleBlog'
 
 describe.only('<SimpleBlog />', () => {
-  it('renders simple blog', () => {
-    const blog = {
-      title: 'Komponenttitestaus tapahtuu jestillä ja enzymellä',
-      author: 'filaakst',
-      likes: 10
-    }
-    const onClick = () => {}
+  const blog = {
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    likes: 3
+  }
 
-    const simpleBlogComponent = shallow(<SimpleBlog blog={blog} onClick={onClick} />)
-    console.log(simpleBlogComponent.debug())
+  it('renders title, author and likes', () => {
+    const blogComponent = shallow(<SipleBlog blog={blog} />)
 
-    const titleDiv = simpleBlogComponent.find('.title')
-    console.log(titleDiv.debug())
-    expect(titleDiv.text()).toContain(`${blog.title} ${blog.author}`)
-
-    const likeDiv = simpleBlogComponent.find('.likes')
-    console.log(likeDiv.debug())
-
-    expect(likeDiv.text()).toContain(`blog has ${blog.likes} likes`)
-
+    expect(blogComponent.text()).toContain(blog.title)
+    expect(blogComponent.text()).toContain(blog.author)
+    expect(blogComponent.text()).toContain(String(blog.likes))
   })
 
-  it('blog like button click', () => {
-    const blog = {
-      title: 'Komponenttitestaus tapahtuu jestillä ja enzymellä',
-      author: 'filaakst',
-      likes: 10
-    }
-    const onClickMock = jest.fn()
-    const simpleBlogComponent = shallow(<SimpleBlog blog={blog} onClick={onClickMock} />)
-    const button = simpleBlogComponent.find('button')
-    const amountOfClicks = 2
-    let i
-    for (i = 0; i < amountOfClicks; i++) {
-      button.simulate('click')
-    }
-    expect(onClickMock.mock.calls.length).toBe(amountOfClicks)
-  })
+  it('calls onClick handler', () => {
+    const onClick = jest.fn()
+    const blogComponent = shallow(<SipleBlog blog={blog} onClick={onClick} />)
 
+    const button = blogComponent.find('button')
+    button.simulate('click')
+    button.simulate('click')
+
+    expect(onClick.mock.calls.length).toBe(2)
+  })  
 })
