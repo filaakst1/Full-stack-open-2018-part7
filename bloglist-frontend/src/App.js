@@ -6,7 +6,7 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
-
+import userService from './services/users'
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -18,6 +18,7 @@ class App extends React.Component {
       title: '',
       author: '',
       url: '',
+      users: [],
       notification: null
     }
   }
@@ -26,6 +27,10 @@ class App extends React.Component {
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
     )
+
+    userService.getAll().then(users => {
+      this.setState({ users })
+    })
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -152,8 +157,22 @@ class App extends React.Component {
 
     const byLikes = (b1, b2) => b2.likes - b1.likes
 
+    const countBlogs = (username, blogs = []) => {
+      return blogs.filter(blog => blog.user.username === username).reduce((accumulator) => accumulator+1, 0)
+    }
+    const usersAndAmountsOfBlogs =(users, blogs ) => {
+      console.log('users', users)
+      console.log('blogs', blogs)
+      return users
+        .map(user => {
+          return {
+            user: user,
+            blogs: countBlogs( user.username, blogs)
+          }
+        })
+    }
     const blogsInOrder = this.state.blogs.sort(byLikes)
-
+    const userBlogMap = usersAndAmountsOfBlogs(this.state.users, this.state.blogs)
     return (
       <div>
         <Router>
@@ -184,6 +203,19 @@ class App extends React.Component {
                     deletable={blog.user === undefined || blog.user.username === this.state.user.username}
                   />
                 )
+              )
+            }} />
+            <Route exact path="/users" render={() => {
+              return (
+                <div>
+                  <h2>users</h2>
+                  <table id='userTable' >
+                    <thead><tr><th></th><th>blogs added</th></tr></thead>
+                    <tbody>
+                      { userBlogMap.map(item => <tr key={item.user.username}><td>{item.user.name !== undefined? item.user.name: item.user.username}</td><td>{item.blogs}</td></tr>) }
+                    </tbody>
+                  </table>
+                </div>
               )
             }} />
           </div>
