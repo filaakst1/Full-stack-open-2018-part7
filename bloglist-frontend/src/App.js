@@ -219,7 +219,7 @@ class App extends React.Component {
             <Route exact path="/users/:id" render={({ match }) => {
               const userId = match.params.id
               const entry = userBlogMap.find(entry => entry.user._id === userId)
-              if(entry === null || entry === undefined) {
+              if( entry === null || entry === undefined ) {
                 return null
               }
               return (
