@@ -1,4 +1,5 @@
 import React from 'react'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
@@ -155,30 +156,38 @@ class App extends React.Component {
 
     return (
       <div>
-        <Notification notification={this.state.notification} />
+        <Router>
+          <div>
+            <Notification notification={this.state.notification} />
 
-        {this.state.user.name} logged in <button onClick={this.logout}>logout</button>
+            {this.state.user.name} logged in <button onClick={this.logout}>logout</button>
 
-        <Togglable buttonLabel='uusi blogi'>
-          <BlogForm
-            handleChange={this.handleLoginChange}
-            title={this.state.title}
-            author={this.state.author}
-            url={this.state.url}
-            handleSubmit={this.addBlog}
-          />
-        </Togglable>
+            <Togglable buttonLabel='uusi blogi'>
+              <BlogForm
+                handleChange={this.handleLoginChange}
+                title={this.state.title}
+                author={this.state.author}
+                url={this.state.url}
+                handleSubmit={this.addBlog}
+              />
+            </Togglable>
 
-        <h2>blogs</h2>
-        {blogsInOrder.map(blog =>
-          <Blog
-            key={blog._id}
-            blog={blog}
-            like={this.like(blog._id)}
-            remove={this.remove(blog._id)}
-            deletable={blog.user === undefined || blog.user.username === this.state.user.username}
-          />
-        )}
+            <h2>blogs</h2>
+            <Route exact path='/' render={() => {
+              return (
+                blogsInOrder.map(blog =>
+                  <Blog
+                    key={blog._id}
+                    blog={blog}
+                    like={this.like(blog._id)}
+                    remove={this.remove(blog._id)}
+                    deletable={blog.user === undefined || blog.user.username === this.state.user.username}
+                  />
+                )
+              )
+            }} />
+          </div>
+        </Router>
       </div>
     )
   }
