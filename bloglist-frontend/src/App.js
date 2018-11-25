@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Menu from './components/Menu'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -177,9 +178,8 @@ class App extends React.Component {
         <Router>
           <div>
             <Notification notification={this.state.notification} />
-
-            {this.state.user.name} logged in <button onClick={this.logout}>logout</button>
-
+            <h2>blog app</h2>
+            <Menu user={this.state.user} logout={this.logout} />
             <Togglable buttonLabel='uusi blogi'>
               <BlogForm
                 handleChange={this.handleLoginChange}
@@ -189,8 +189,6 @@ class App extends React.Component {
                 handleSubmit={this.addBlog}
               />
             </Togglable>
-
-            <h2>blog app</h2>
             <Route exact path='/' render={() => {
               const blogStyle = {
                 paddingTop: 10,
