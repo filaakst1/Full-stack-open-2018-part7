@@ -1,0 +1,43 @@
+{
+  "name": "full-stack-open-2018-part4",
+  "version": "1.0.0",
+  "description": "part 4 of full stack open 2018 course",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node index.js",
+    "watch": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/filaakst1/Full-stack-open-2018-part4.git"
+  },
+  "author": "Tomi Laakso",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/filaakst1/Full-stack-open-2018-part4/issues"
+  },
+  "homepage": "https://github.com/filaakst1/Full-stack-open-2018-part4#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.2",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "dotenv": "^6.1.0",
+    "express": "^4.16.4",
+    "http": "0.0.0",
+    "jsonwebtoken": "^8.3.0",
+    "mongoose": "^5.3.3"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "cross-env": "^5.2.0",
+    "eslint": "^5.7.0",
+    "jest": "^23.6.0",
+    "nodemon": "^1.18.4",
+    "supertest": "^3.3.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
