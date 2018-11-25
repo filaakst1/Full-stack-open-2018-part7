@@ -53,7 +53,8 @@ class App extends React.Component {
   }
 
   like = (id) => async () => {
-    const liked = this.state.blogs.find(b=>b._id===id)
+    console.log('tykätty')
+    const liked = this.state.blogs.find(b => b._id===id)
     const updated = { ...liked, likes: liked.likes + 1 }
     await blogService.update(id, updated)
     this.notify(`you liked '${updated.title}' by ${updated.author}`)
@@ -245,7 +246,7 @@ class App extends React.Component {
                 return null
               }
               return (
-                <Blog blog={blog} like={this.like}/>
+                <Blog blog={blog} like={this.like(blog._id)} />
               )
             }}
             />
