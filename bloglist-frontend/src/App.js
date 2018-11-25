@@ -191,15 +191,20 @@ class App extends React.Component {
 
             <h2>blog app</h2>
             <Route exact path='/' render={() => {
+              const blogStyle = {
+                paddingTop: 10,
+                paddingLeft: 2,
+                border: 'solid',
+                borderWidth: 1,
+                marginBottom: 5
+              }
+
+
               return (
                 blogsInOrder.map(blog =>
-                  <Blog
-                    key={blog._id}
-                    blog={blog}
-                    like={this.like(blog._id)}
-                    remove={this.remove(blog._id)}
-                    deletable={blog.user === undefined || blog.user.username === this.state.user.username}
-                  />
+                  <div  key={blog._id} style={blogStyle}>
+                    <NavLink  exact to={`/blogs/${blog._id}`} >{blog.title} {blog.author}</NavLink>
+                  </div>
                 )
               )
             }} />
@@ -230,6 +235,17 @@ class App extends React.Component {
                     {entry.blogs.map(blog => <li key={blog._id}>{blog.title} by {blog.author}</li>)}
                   </ul>
                 </div>
+              )
+            }}
+            />
+            <Route exact path="/blogs/:id" render={({ match }) => {
+              const blogId = match.params.id
+              const blog = blogsInOrder.find(b => b._id === blogId)
+              if( blog === null || blog === undefined ) {
+                return null
+              }
+              return (
+                <Blog blog={blog} like={this.like}/>
               )
             }}
             />
