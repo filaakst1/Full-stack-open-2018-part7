@@ -8,7 +8,7 @@ class Blog extends React.Component {
     }
   }
   render() {
-    const { blog,like } = this.props
+    const { blog,like , notify } = this.props
     const adder = blog.user ? blog.user.name : 'anonymous'
     return (
       <div>
@@ -19,7 +19,7 @@ class Blog extends React.Component {
           <div>added by {adder}</div>
         </div>
         <div>
-          <BlogComments blog={blog} />
+          <BlogComments blog={blog} notify={notify} />
         </div>
       </div>
     )

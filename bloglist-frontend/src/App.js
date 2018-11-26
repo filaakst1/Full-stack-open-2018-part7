@@ -243,7 +243,7 @@ class App extends React.Component {
                 return null
               }
               return (
-                <Blog blog={blog} like={this.like(blog._id)} />
+                <Blog blog={blog} like={this.like(blog._id)} notify={this.notify} />
               )
             }}
             />
