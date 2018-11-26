@@ -32,7 +32,7 @@ commentRouter.post('/:id/comments', async (request, response) => {
     })
 
     const savedComment = await comment.save()
-    blog.comments = blog.comments.concat(savedComment.id)
+    blog.comments = blog.comments.concat(savedComment._id)
 
     await blog.save()
     response.status(201).json(Comment.format(savedComment))

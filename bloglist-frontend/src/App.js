@@ -54,7 +54,6 @@ class App extends React.Component {
   }
 
   like = (id) => async () => {
-    console.log('tykätty')
     const liked = this.state.blogs.find(b => b._id===id)
     const updated = { ...liked, likes: liked.likes + 1 }
     await blogService.update(id, updated)

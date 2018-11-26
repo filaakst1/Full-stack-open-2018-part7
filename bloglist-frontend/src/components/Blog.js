@@ -1,5 +1,5 @@
 import React from 'react'
-
+import BlogComments from './BlogComments'
 class Blog extends React.Component {
   constructor() {
     super()
@@ -8,14 +8,19 @@ class Blog extends React.Component {
     }
   }
   render() {
-    const { blog, like } = this.props
+    const { blog,like } = this.props
     const adder = blog.user ? blog.user.name : 'anonymous'
     return (
       <div>
-        <h2>{blog.title} {blog.author}</h2>
-        <a href={blog.url}>{blog.url}</a>
-        <div>{blog.likes} likes <button onClick={like}>like</button></div>
-        <div>added by {adder}</div>
+        <div>
+          <h2>{blog.title} {blog.author}</h2>
+          <a href={blog.url}>{blog.url}</a>
+          <div>{blog.likes} likes <button onClick={like}>like</button></div>
+          <div>added by {adder}</div>
+        </div>
+        <div>
+          <BlogComments blog={blog} />
+        </div>
       </div>
     )
   }
