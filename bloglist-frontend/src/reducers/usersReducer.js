@@ -1,17 +1,10 @@
 import userService from '../services/users'
 
-const initialState= {
-  message: '',
-  type: 'info'
-}
-const usersReducer = (store = initialState, action) => {
+const usersReducer = (store = [], action) => {
   console.log('USERS ACTION: ', action)
   switch(action.type) {
   case 'INIT_USERS': {
-    const users = action.data
-    return {
-      users
-    }
+    return action.data
   }
   default:
     return store

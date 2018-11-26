@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
 
 import { notify } from './reducers/notificationReducer'
-
+import { usersInitialization } from './reducers/usersReducer'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
@@ -11,7 +11,7 @@ import Menu from './components/Menu'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import userService from './services/users'
+
 
 class App extends React.Component {
   constructor(props) {
@@ -23,8 +23,7 @@ class App extends React.Component {
       password: '',
       title: '',
       author: '',
-      url: '',
-      users: []
+      url: ''
     }
   }
 
@@ -32,10 +31,7 @@ class App extends React.Component {
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
     )
-
-    userService.getAll().then(users => {
-      this.setState({ users })
-    })
+    this.props.usersInitialization()
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -71,7 +67,7 @@ class App extends React.Component {
     await blogService.remove(id)
     this.notify(`blog '${deleted.title}' by ${deleted.author} removed`)
     this.setState({
-      blogs: this.state.blogs.filter(b=>b._id!==id)
+      blogs: this.state.blogs.filter(b => b._id!==id)
     })
   }
 
@@ -159,7 +155,9 @@ class App extends React.Component {
     const getUserBlogs = (username, blogs = []) => {
       return blogs.filter(blog => blog.user.username === username)
     }
-    const usersAndBlogsToMap = ( users, blogs ) => {
+    const usersAndBlogsToMap = ( blogs ) => {
+      const { users } = this.props
+      console.log('DEBUG', users)
       return users
         .map(user => {
           return {
@@ -169,7 +167,7 @@ class App extends React.Component {
         })
     }
     const blogsInOrder = this.state.blogs.sort(byLikes)
-    const userBlogMap = usersAndBlogsToMap(this.state.users, this.state.blogs)
+    const userBlogMap = usersAndBlogsToMap(this.state.blogs)
     return (
       <div>
         <Router>
@@ -251,5 +249,9 @@ class App extends React.Component {
     )
   }
 }
-
-export default connect(null,{ notify })(App)
+const mapStateToProps = (state) => {
+  return {
+    users: state.users
+  }
+}
+export default connect(mapStateToProps,{ notify,usersInitialization })(App)
