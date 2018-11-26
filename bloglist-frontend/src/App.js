@@ -1,5 +1,9 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
+
+import { notify } from './reducers/notificationReducer'
+
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
@@ -8,6 +12,7 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import userService from './services/users'
+
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -15,12 +20,11 @@ class App extends React.Component {
       blogs: [],
       user: null,
       username: '',
-      password: '', 
+      password: '',
       title: '',
       author: '',
       url: '',
-      users: [],
-      notification: null
+      users: []
     }
   }
 
@@ -41,15 +45,9 @@ class App extends React.Component {
   }
 
   notify = (message, type = 'info') => {
-    this.setState({
-      notification: {
-        message, type
-      }
-    })
+    this.props.notify(message, type)
     setTimeout(() => {
-      this.setState({
-        notification: null
-      })
+      this.props.notify('')
     }, 10000)
   }
 
@@ -253,4 +251,5 @@ class App extends React.Component {
     )
   }
 }
-export default App
+
+export default connect(null,{ notify })(App)
