@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
 import { notify } from './reducers/notificationReducer'
 import { usersInitialization } from './reducers/usersReducer'
 import { login, logout, readLocalStorage } from './reducers/loginReducer'
-import { blogInitialization } from './reducers/blogReducer'
+import { blogInitialization, likeBlog } from './reducers/blogReducer'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
@@ -32,19 +32,10 @@ class App extends React.Component {
 
   notify = (message, type = 'info') => {
     this.props.notify(message, type)
-    setTimeout(() => {
-      this.props.notify('')
-    }, 10000)
   }
 
   like = (id) => async () => {
-    const liked = this.state.blogs.find(b => b._id===id)
-    const updated = { ...liked, likes: liked.likes + 1 }
-    await blogService.update(id, updated)
-    this.notify(`you liked '${updated.title}' by ${updated.author}`)
-    this.setState({
-      blogs: this.state.blogs.map(b => b._id === id ? updated : b)
-    })
+    this.props.likeBlog(id)
   }
 
   remove = (id) => async () => {
@@ -229,4 +220,4 @@ const mapStateToProps = (state) => {
     blogs: state.blogs
   }
 }
-export default connect(mapStateToProps,{ login, logout,readLocalStorage, notify,usersInitialization,blogInitialization })(App)
+export default connect(mapStateToProps,{ login, logout,readLocalStorage, notify,usersInitialization,blogInitialization,likeBlog })(App)
