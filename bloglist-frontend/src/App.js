@@ -13,7 +13,7 @@ import Menu from './components/Menu'
 import Togglable from './components/Togglable'
 import UsersList from './components/UsersList'
 import UserBlogList from './components/UserBlogList'
-import blogService from './services/blogs'
+import LoginForm from './components/LoginForm'
 
 
 class App extends React.Component {
@@ -89,18 +89,7 @@ class App extends React.Component {
       return (
         <div>
           <Notification />
-          <h2>Kirjaudu sovellukseen</h2>
-          <form onSubmit={this.login}>
-            <div>
-              käyttäjätunnus
-              <input type="text" name="username" />
-            </div>
-            <div>
-              salasana
-              <input type="password" name="password" />
-            </div>
-            <button type="submit">kirjaudu</button>
-          </form>
+          <LoginForm />
         </div>
       )
     }
