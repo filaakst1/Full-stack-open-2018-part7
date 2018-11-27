@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+
 const Menu = ({ user, logout }) => {
   return(
     <div>

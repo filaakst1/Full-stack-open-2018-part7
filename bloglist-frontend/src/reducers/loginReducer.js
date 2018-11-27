@@ -1,5 +1,6 @@
 import loginService from '../services/login'
 import blogService from '../services/blogs'
+
 const loginReducer = (store = null, action) => {
   console.log('NOTIFICATION ACTION: ', action)
   switch(action.type) {
@@ -9,7 +10,19 @@ const loginReducer = (store = null, action) => {
     return store
   }
 }
-
+export const readLocalStorage = () => {
+  return async (dispatch) => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      blogService.setToken(user.token)
+      dispatch({
+        type: 'LOGIN_ACTION',
+        data: user
+      })
+    }
+  }
+}
 export const login = ( username, password ) => {
   return async (dispatch) => {
     try {

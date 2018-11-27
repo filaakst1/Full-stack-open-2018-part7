@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
 
 import { notify } from './reducers/notificationReducer'
 import { usersInitialization } from './reducers/usersReducer'
-import { login, logout } from './reducers/loginReducer'
+import { login, logout, readLocalStorage } from './reducers/loginReducer'
+import { blogInitialization } from './reducers/blogReducer'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
@@ -17,7 +18,6 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      blogs: [],
       title: '',
       author: '',
       url: ''
@@ -25,16 +25,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    blogService.getAll().then(blogs =>
-      this.setState({ blogs })
-    )
+    this.props.blogInitialization()
     this.props.usersInitialization()
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      this.setState({ user })
-      blogService.setToken(user.token)
-    }
+    this.props.readLocalStorage()
   }
 
   notify = (message, type = 'info') => {
@@ -135,9 +128,8 @@ class App extends React.Component {
     const getUserBlogs = (username, blogs = []) => {
       return blogs.filter(blog => blog.user.username === username)
     }
-    const usersAndBlogsToMap = ( blogs ) => {
-      const { users } = this.props
-      console.log('DEBUG', users)
+    const usersAndBlogsToMap = ( ) => {
+      const { users, blogs } = this.props
       return users
         .map(user => {
           return {
@@ -146,15 +138,16 @@ class App extends React.Component {
           }
         })
     }
-    const blogsInOrder = this.state.blogs.sort(byLikes)
-    const userBlogMap = usersAndBlogsToMap(this.state.blogs)
+    const { blogs, user } = this.props
+    const blogsInOrder = blogs.sort(byLikes)
+    const userBlogMap = usersAndBlogsToMap()
     return (
       <div>
         <Router>
           <div>
-            <Notification notification={this.state.notification} />
+            <Notification  />
             <h2>blog app</h2>
-            <Menu user={this.state.user} logout={this.logout} />
+            <Menu user={user} logout={this.logout} />
             <Togglable buttonLabel='uusi blogi'>
               <BlogForm
                 handleChange={this.handleLoginChange}
@@ -232,7 +225,8 @@ class App extends React.Component {
 const mapStateToProps = (state) => {
   return {
     users: state.users,
-    user: state.user
+    user: state.user,
+    blogs: state.blogs
   }
 }
-export default connect(mapStateToProps,{ login, logout, notify,usersInitialization })(App)
+export default connect(mapStateToProps,{ login, logout,readLocalStorage, notify,usersInitialization,blogInitialization })(App)
