@@ -12,6 +12,7 @@ import Notification from './components/Notification'
 import Menu from './components/Menu'
 import Togglable from './components/Togglable'
 import UsersList from './components/UsersList'
+import UserBlogList from './components/UserBlogList'
 import blogService from './services/blogs'
 
 
@@ -106,22 +107,9 @@ class App extends React.Component {
 
     const byLikes = (b1, b2) => b2.likes - b1.likes
 
-    const getUserBlogs = (username, blogs = []) => {
-      return blogs.filter(blog => blog.user.username === username)
-    }
-    const usersAndBlogsToMap = ( ) => {
-      const { users, blogs } = this.props
-      return users
-        .map(user => {
-          return {
-            user: user,
-            blogs: getUserBlogs( user.username, blogs)
-          }
-        })
-    }
     const { blogs, user } = this.props
     const blogsInOrder = blogs.sort(byLikes)
-    const userBlogMap = usersAndBlogsToMap()
+
     return (
       <div>
         <Router>
@@ -162,19 +150,8 @@ class App extends React.Component {
               )
             }} />
             <Route exact path="/users/:id" render={({ match }) => {
-              const userId = match.params.id
-              const entry = userBlogMap.find(entry => entry.user._id === userId)
-              if( entry === null || entry === undefined ) {
-                return null
-              }
               return (
-                <div>
-                  <h2>{entry.user.name}</h2>
-                  <h3>Added blogs</h3>
-                  <ul>
-                    {entry.blogs.map(blog => <li key={blog._id}>{blog.title} by {blog.author}</li>)}
-                  </ul>
-                </div>
+                <UserBlogList userId={match.params.id} />
               )
             }}
             />
