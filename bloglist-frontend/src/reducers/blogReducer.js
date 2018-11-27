@@ -7,6 +7,8 @@ const blogReducer = (store = [], action) => {
     return action.data
   case 'LIKE_BLOG':
     return store.map(b => b._id === action.id ? action.data : b)
+  case 'DELETE_BLOG':
+    return store.filter(b => b._id!==action.id)
   default:
     return store
   }
@@ -31,18 +33,20 @@ export const likeBlog = (id) => {
       data : updated,
       id: id
     })
-    dispatch({
-      message : `you liked '${updated.title}' by ${updated.author}`,
-      messageType: 'info',
-      type: 'NOTIFY'
-    })
-    setTimeout(() => {
-      dispatch({
-        message : '',
-        messageType: 'info',
-        type: 'NOTIFY'
-      })
-    }, 10000)
   }
 }
+
+export const removeBlog = (id) => {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const deleted = state.blogs.find(b => b._id === id)
+    await blogService.remove(id)
+    dispatch({
+      type: 'DELETE_BLOG',
+      data : deleted,
+      id: id
+    })
+  }
+}
+
 export default blogReducer

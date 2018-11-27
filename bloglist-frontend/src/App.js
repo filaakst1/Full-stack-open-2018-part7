@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
 import { notify } from './reducers/notificationReducer'
 import { usersInitialization } from './reducers/usersReducer'
 import { login, logout, readLocalStorage } from './reducers/loginReducer'
-import { blogInitialization, likeBlog } from './reducers/blogReducer'
+import { blogInitialization, likeBlog,removeBlog } from './reducers/blogReducer'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
@@ -34,22 +34,17 @@ class App extends React.Component {
     this.props.notify(message, type)
   }
 
-  like = (id) => async () => {
-    this.props.likeBlog(id)
+  like = (blog) => async () => {
+    this.props.likeBlog(blog._id)
+    this.props.notify(`you liked '${blog.title}' by ${blog.author}`)
   }
 
-  remove = (id) => async () => {
-    const deleted = this.state.blogs.find(b => b._id === id)
-    const ok = window.confirm(`remove blog '${deleted.title}' by ${deleted.author}?`)
-    if ( ok===false) {
-      return
+  remove = (blog) => async () => {
+    const ok = window.confirm(`remove blog '${blog.title}' by ${blog.author}?`)
+    if ( ok ) {
+      this.props.removeBlog(blog._id)
+      this.props.notify(`blog '${blog.title}' by ${blog.author} removed`)
     }
-
-    await blogService.remove(id)
-    this.notify(`blog '${deleted.title}' by ${deleted.author} removed`)
-    this.setState({
-      blogs: this.state.blogs.filter(b => b._id!==id)
-    })
   }
 
   addBlog = async (event) => {
@@ -220,4 +215,4 @@ const mapStateToProps = (state) => {
     blogs: state.blogs
   }
 }
-export default connect(mapStateToProps,{ login, logout,readLocalStorage, notify,usersInitialization,blogInitialization,likeBlog })(App)
+export default connect(mapStateToProps,{ login, logout,readLocalStorage, notify,usersInitialization,blogInitialization,likeBlog,removeBlog })(App)
