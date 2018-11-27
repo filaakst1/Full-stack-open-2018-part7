@@ -4,13 +4,13 @@ import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
 
 import { notify } from './reducers/notificationReducer'
 import { usersInitialization } from './reducers/usersReducer'
+import { login, logout } from './reducers/loginReducer'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Menu from './components/Menu'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
-import loginService from './services/login'
 
 
 class App extends React.Component {
@@ -18,9 +18,6 @@ class App extends React.Component {
     super(props)
     this.state = {
       blogs: [],
-      user: null,
-      username: '',
-      password: '',
       title: '',
       author: '',
       url: ''
@@ -79,7 +76,7 @@ class App extends React.Component {
       url: this.state.url,
     }
 
-    const result = await blogService.create(blog) 
+    const result = await blogService.create(blog)
     this.notify(`blog '${blog.title}' by ${blog.author} added`)
     this.setState({
       title: '',
@@ -90,23 +87,20 @@ class App extends React.Component {
   }
 
   logout = () => {
-    window.localStorage.removeItem('loggedBlogAppUser')
+    this.props.logout()
     this.notify('logged out')
-    this.setState({ user: null })
+
   }
 
   login = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({
-        username: this.state.username,
-        password: this.state.password
-      })
-
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
-      blogService.setToken(user.token)
+      const username = event.target.username.value
+      const password = event.target.password.value
+      event.target.username.value = ''
+      event.target.password.value = ''
+      this.props.login(username, password)
       this.notify('welcome back!')
-      this.setState({ username: '', password: '', user })
     } catch (exception) {
       this.notify('käyttäjätunnus tai salasana virheellinen', 'error')
       setTimeout(() => {
@@ -115,34 +109,20 @@ class App extends React.Component {
     }
   }
 
-  handleLoginChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
-
   render() {
-    if (this.state.user === null) {
+    if (this.props.user === null) {
       return (
         <div>
-          <Notification notification={this.state.notification} />
+          <Notification />
           <h2>Kirjaudu sovellukseen</h2>
           <form onSubmit={this.login}>
             <div>
               käyttäjätunnus
-              <input
-                type="text"
-                name="username"
-                value={this.state.username}
-                onChange={this.handleLoginChange}
-              />
+              <input type="text" name="username" />
             </div>
             <div>
               salasana
-              <input
-                type="password"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleLoginChange}
-              />
+              <input type="password" name="password" />
             </div>
             <button type="submit">kirjaudu</button>
           </form>
@@ -251,7 +231,8 @@ class App extends React.Component {
 }
 const mapStateToProps = (state) => {
   return {
-    users: state.users
+    users: state.users,
+    user: state.user
   }
 }
-export default connect(mapStateToProps,{ notify,usersInitialization })(App)
+export default connect(mapStateToProps,{ login, logout, notify,usersInitialization })(App)
