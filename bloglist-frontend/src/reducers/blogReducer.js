@@ -9,6 +9,8 @@ const blogReducer = (store = [], action) => {
     return store.map(b => b._id === action.id ? action.data : b)
   case 'DELETE_BLOG':
     return store.filter(b => b._id!==action.id)
+  case 'ADD_BLOG':
+    return store.concat(action.data)
   default:
     return store
   }
@@ -45,6 +47,20 @@ export const removeBlog = (id) => {
       type: 'DELETE_BLOG',
       data : deleted,
       id: id
+    })
+  }
+}
+export const addBlog = (title, author, url) => {
+  return async (dispatch) => {
+    const blog = {
+      title: title,
+      author: author,
+      url: url
+    }
+    const result = await blogService.create(blog)
+    dispatch({
+      type: 'ADD_BLOG',
+      data : result
     })
   }
 }

@@ -5,12 +5,13 @@ import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
 import { notify } from './reducers/notificationReducer'
 import { usersInitialization } from './reducers/usersReducer'
 import { login, logout, readLocalStorage } from './reducers/loginReducer'
-import { blogInitialization, likeBlog,removeBlog } from './reducers/blogReducer'
+import { blogInitialization, likeBlog,removeBlog, addBlog } from './reducers/blogReducer'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Menu from './components/Menu'
 import Togglable from './components/Togglable'
+import UsersList from './components/UsersList'
 import blogService from './services/blogs'
 
 
@@ -49,20 +50,14 @@ class App extends React.Component {
 
   addBlog = async (event) => {
     event.preventDefault()
-    const blog = {
-      title: this.state.title,
-      author: this.state.author,
-      url: this.state.url,
-    }
-
-    const result = await blogService.create(blog)
-    this.notify(`blog '${blog.title}' by ${blog.author} added`)
-    this.setState({
-      title: '',
-      url: '',
-      author: '',
-      blogs: this.state.blogs.concat(result)
-    })
+    const title = event.target.title.value
+    const author = event.target.author.value
+    const url = event.target.url.value
+    event.target.title.value = ''
+    event.target.author.value = ''
+    event.target.url.value = ''
+    this.props.addBlog(title, author, url)
+    this.notify(`blog '${title}' by ${author} added`)
   }
 
   logout = () => {
@@ -163,15 +158,7 @@ class App extends React.Component {
             }} />
             <Route exact path="/users" render={() => {
               return (
-                <div>
-                  <h2>users</h2>
-                  <table id='userTable' >
-                    <thead><tr><th></th><th>blogs added</th></tr></thead>
-                    <tbody>
-                      { userBlogMap.map(item => <tr key={item.user.username}><td><NavLink  exact to={`/users/${item.user._id}`} >{item.user.name !== undefined? item.user.name: item.user.username}</NavLink></td><td>{item.blogs.length}</td></tr>) }
-                    </tbody>
-                  </table>
-                </div>
+                <UsersList />
               )
             }} />
             <Route exact path="/users/:id" render={({ match }) => {
@@ -215,4 +202,4 @@ const mapStateToProps = (state) => {
     blogs: state.blogs
   }
 }
-export default connect(mapStateToProps,{ login, logout,readLocalStorage, notify,usersInitialization,blogInitialization,likeBlog,removeBlog })(App)
+export default connect(mapStateToProps,{ login, logout,readLocalStorage, notify,usersInitialization,blogInitialization,likeBlog,removeBlog, addBlog })(App)
