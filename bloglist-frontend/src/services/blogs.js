@@ -19,6 +19,7 @@ const setToken = (newToken) => {
 }
 
 const create = async (newObject) => {
+  console.log('tanne nain')
   const response = await axios.post(baseUrl, newObject, config())
   return response.data
 }

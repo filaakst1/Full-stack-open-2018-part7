@@ -5,8 +5,7 @@ import { connect } from 'react-redux'
 class UserBlogList extends React.Component {
 
   render() {
-    const { users,userId, blogs }  = this.props
-    const user = users.find(user => user._id === userId)
+    const { user, blogs }  = this.props
     if( user === null || user === undefined ) {
       return null
     }
@@ -21,20 +20,12 @@ class UserBlogList extends React.Component {
     )
   }
 }
-const usersAndBlogsToMap = ( users, blogs ) => {
-  return users
-    .map(user => {
-      return {
-        user: user,
-        blogs: blogs.filter(blog => blog.user.username === user.username)
-      }
-    })
-}
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps ) => {
+  const userId =ownProps.userId
   return {
-    users: state.users,
-    blogs: state.blogs
+    user: state.users.find(user => user._id === userId),
+    blogs: state.blogs.filter(blog => blog.user._id === userId)
   }
 }
 

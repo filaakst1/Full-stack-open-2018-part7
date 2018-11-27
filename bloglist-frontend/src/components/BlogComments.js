@@ -1,6 +1,10 @@
 import React from 'react'
+import { connect } from 'react-redux'
+
 import commentService from '../services/comments'
-class Blog extends React.Component {
+import { notify } from '../reducers/notificationReducer'
+
+class BlogComments extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -13,7 +17,6 @@ class Blog extends React.Component {
     commentService.getAll(blog._id).then(comments => {
       this.setState({ comments })
     })
-
   }
   addComment = async (event) => {
     event.preventDefault()
@@ -47,5 +50,4 @@ class Blog extends React.Component {
     )
   }
 }
-
-export default Blog
+export default connect(null,{ notify })(BlogComments)

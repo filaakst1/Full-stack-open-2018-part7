@@ -1,13 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-import { notify } from './reducers/notificationReducer'
 import { usersInitialization } from './reducers/usersReducer'
-import { login, logout, readLocalStorage } from './reducers/loginReducer'
-import { blogInitialization, likeBlog,removeBlog, addBlog } from './reducers/blogReducer'
+import { readLocalStorage } from './reducers/loginReducer'
+import { blogInitialization } from './reducers/blogReducer'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
+import BlogList from './components/BlogList'
 import Notification from './components/Notification'
 import Menu from './components/Menu'
 import Togglable from './components/Togglable'
@@ -31,59 +31,6 @@ class App extends React.Component {
     this.props.usersInitialization()
     this.props.readLocalStorage()
   }
-
-  notify = (message, type = 'info') => {
-    this.props.notify(message, type)
-  }
-
-  like = (blog) => async () => {
-    this.props.likeBlog(blog._id)
-    this.props.notify(`you liked '${blog.title}' by ${blog.author}`)
-  }
-
-  remove = (blog) => async () => {
-    const ok = window.confirm(`remove blog '${blog.title}' by ${blog.author}?`)
-    if ( ok ) {
-      this.props.removeBlog(blog._id)
-      this.props.notify(`blog '${blog.title}' by ${blog.author} removed`)
-    }
-  }
-
-  addBlog = async (event) => {
-    event.preventDefault()
-    const title = event.target.title.value
-    const author = event.target.author.value
-    const url = event.target.url.value
-    event.target.title.value = ''
-    event.target.author.value = ''
-    event.target.url.value = ''
-    this.props.addBlog(title, author, url)
-    this.notify(`blog '${title}' by ${author} added`)
-  }
-
-  logout = () => {
-    this.props.logout()
-    this.notify('logged out')
-
-  }
-
-  login = async (event) => {
-    event.preventDefault()
-    try {
-      const username = event.target.username.value
-      const password = event.target.password.value
-      event.target.username.value = ''
-      event.target.password.value = ''
-      this.props.login(username, password)
-      this.notify('welcome back!')
-    } catch (exception) {
-      this.notify('käyttäjätunnus tai salasana virheellinen', 'error')
-      setTimeout(() => {
-        this.setState({ error: null })
-      }, 5000)
-    }
-  }
-
   render() {
     if (this.props.user === null) {
       return (
@@ -94,66 +41,29 @@ class App extends React.Component {
       )
     }
 
-    const byLikes = (b1, b2) => b2.likes - b1.likes
-
-    const { blogs, user } = this.props
-    const blogsInOrder = blogs.sort(byLikes)
-
     return (
       <div>
         <Router>
           <div>
             <Notification  />
             <h2>blog app</h2>
-            <Menu user={user} logout={this.logout} />
+            <Menu />
             <Togglable buttonLabel='uusi blogi'>
-              <BlogForm
-                handleChange={this.handleLoginChange}
-                title={this.state.title}
-                author={this.state.author}
-                url={this.state.url}
-                handleSubmit={this.addBlog}
-              />
+              <BlogForm />
             </Togglable>
-            <Route exact path='/' render={() => {
-              const blogStyle = {
-                paddingTop: 10,
-                paddingLeft: 2,
-                border: 'solid',
-                borderWidth: 1,
-                marginBottom: 5
-              }
-
-
-              return (
-                blogsInOrder.map(blog =>
-                  <div  key={blog._id} style={blogStyle}>
-                    <NavLink  exact to={`/blogs/${blog._id}`} >{blog.title} {blog.author}</NavLink>
-                  </div>
-                )
-              )
-            }} />
-            <Route exact path="/users" render={() => {
-              return (
-                <UsersList />
-              )
-            }} />
-            <Route exact path="/users/:id" render={({ match }) => {
-              return (
-                <UserBlogList userId={match.params.id} />
-              )
-            }}
+            <Route exact path='/' render={() =>
+              <BlogList />
+            } />
+            <Route exact path="/users" render={() =>
+              <UsersList />
+            } />
+            <Route exact path="/users/:id" render={({ match }) =>
+              <UserBlogList userId={match.params.id} />
+            }
             />
-            <Route exact path="/blogs/:id" render={({ match }) => {
-              const blogId = match.params.id
-              const blog = blogsInOrder.find(b => b._id === blogId)
-              if( blog === null || blog === undefined ) {
-                return null
-              }
-              return (
-                <Blog blog={blog} like={this.like(blog._id)} notify={this.notify} />
-              )
-            }}
+            <Route exact path="/blogs/:id" render={({ match }) =>
+              <Blog blogId={match.params.id} />
+            }
             />
           </div>
         </Router>
@@ -163,9 +73,7 @@ class App extends React.Component {
 }
 const mapStateToProps = (state) => {
   return {
-    users: state.users,
     user: state.user,
-    blogs: state.blogs
   }
 }
-export default connect(mapStateToProps,{ login, logout,readLocalStorage, notify,usersInitialization,blogInitialization,likeBlog,removeBlog, addBlog })(App)
+export default connect(mapStateToProps,{ readLocalStorage,usersInitialization,blogInitialization })(App)
