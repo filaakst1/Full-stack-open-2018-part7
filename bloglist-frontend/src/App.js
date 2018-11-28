@@ -63,4 +63,9 @@ class App extends React.Component {
     )
   }
 }
-export default connect(null,{ readLocalStorage,usersInitialization,blogInitialization })(App)
+const mapStateToProps = (state) => {
+  return {
+    user: state.user
+  }
+}
+export default connect(mapStateToProps,{ readLocalStorage,usersInitialization,blogInitialization })(App)
