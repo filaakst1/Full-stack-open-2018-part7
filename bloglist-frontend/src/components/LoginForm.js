@@ -33,8 +33,8 @@ class LoginForm extends React.Component {
             <FormControl type='text' name='username' />
             <ControlLabel>salasana</ControlLabel>
             <FormControl type='password' name='password' />
-            <Button bsStyle='success' type='submit'>kirjaudu</Button>
           </FormGroup>
+          <Button bsStyle='success' type='submit'>kirjaudu</Button>
         </form>
       </div>
     )
