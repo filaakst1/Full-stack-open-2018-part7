@@ -22,7 +22,7 @@ class BlogForm extends React.Component {
     return (
       <div>
         <h2>Luo uusi blogi</h2>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.addBlog}>
           <div>
             title
             <input name='title'/>
