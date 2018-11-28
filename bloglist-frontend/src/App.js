@@ -44,9 +44,7 @@ class App extends React.Component {
               <BlogForm />
             </Togglable>
             <Route exact path='/' render={() => <BlogList /> } />
-            <Route exact path="/users" render={() =>
-              <UsersList />
-            } />
+            <Route exact path="/users" render={() => <UsersList /> } />
             <Route exact path="/users/:id" render={({ match }) =>
               <UserBlogList userId={match.params.id} />
             }
