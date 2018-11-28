@@ -12,6 +12,9 @@ class Menu extends React.Component {
 
   render() {
     const { user } = this.props
+    if(user === null) {
+      return null
+    }
     return(
       <div>
         <NavLink to="/">blogs</NavLink> &nbsp;
@@ -23,7 +26,7 @@ class Menu extends React.Component {
 }
 const mapStateToProps = (state) => {
   return {
-    user: state.user,
+    user: state.user
   }
 }
 export default connect(mapStateToProps,{ logout,notify })(Menu)

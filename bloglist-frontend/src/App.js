@@ -17,14 +17,6 @@ import LoginForm from './components/LoginForm'
 
 
 class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      title: '',
-      author: '',
-      url: ''
-    }
-  }
 
   componentDidMount() {
     this.props.blogInitialization()
@@ -71,9 +63,4 @@ class App extends React.Component {
     )
   }
 }
-const mapStateToProps = (state) => {
-  return {
-    user: state.user,
-  }
-}
-export default connect(mapStateToProps,{ readLocalStorage,usersInitialization,blogInitialization })(App)
+export default connect(null,{ readLocalStorage,usersInitialization,blogInitialization })(App)
