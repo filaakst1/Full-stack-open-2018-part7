@@ -34,7 +34,7 @@ class App extends React.Component {
     }
 
     return (
-      <div>
+      <div className='container' >
         <Router>
           <div>
             <Notification  />
@@ -44,15 +44,9 @@ class App extends React.Component {
               <BlogForm />
             </Togglable>
             <Route exact path='/' render={() => <BlogList /> } />
-            <Route exact path="/users" render={() => <UsersList /> } />
-            <Route exact path="/users/:id" render={({ match }) =>
-              <UserBlogList userId={match.params.id} />
-            }
-            />
-            <Route exact path="/blogs/:id" render={({ match }) =>
-              <Blog blogId={match.params.id} />
-            }
-            />
+            <Route exact path='/users' render={() => <UsersList /> } />
+            <Route exact path='/users/:id' render={({ match }) => <UserBlogList userId={match.params.id} />}/>
+            <Route exact path='/blogs/:id' render={({ match }) => <Blog blogId={match.params.id} /> } />
           </div>
         </Router>
       </div>
