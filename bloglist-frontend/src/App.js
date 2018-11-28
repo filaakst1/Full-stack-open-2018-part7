@@ -43,9 +43,7 @@ class App extends React.Component {
             <Togglable buttonLabel='uusi blogi'>
               <BlogForm />
             </Togglable>
-            <Route exact path='/' render={() =>
-              <BlogList />
-            } />
+            <Route exact path='/' render={() => <BlogList /> } />
             <Route exact path="/users" render={() =>
               <UsersList />
             } />
