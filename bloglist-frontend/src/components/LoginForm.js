@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { notify } from '../reducers/notificationReducer'
 import { login } from '../reducers/loginReducer'
 
-import { Button, FormControl,FormGroup,ControlLabel, } from 'react-bootstrap'
+import { Panel, Button, FormControl,FormGroup,ControlLabel, } from 'react-bootstrap'
 
 
 class LoginForm extends React.Component {
@@ -18,24 +18,29 @@ class LoginForm extends React.Component {
       this.props.login(username, password)
       this.props.notify('welcome back!')
     } catch (exception) {
-      this.notify('käyttäjätunnus tai salasana virheellinen', 'error', 5)
+      this.notify('käyttäjätunnus tai salasana virheellinen', 'danger', 5)
     }
   }
 
   render() {
     return (
       <div>
-        <h2>Kirjaudu sovellukseen</h2>
-
-        <form onSubmit={this.login}>
-          <FormGroup >
-            <ControlLabel>käyttäjätunnus</ControlLabel>
-            <FormControl type='text' name='username' />
-            <ControlLabel>salasana</ControlLabel>
-            <FormControl type='password' name='password' />
-          </FormGroup>
-          <Button bsStyle='success' type='submit'>kirjaudu</Button>
-        </form>
+        <Panel bsStyle="primary">
+          <Panel.Heading>
+            <Panel.Title componentClass="h3">Kirjaudu sovellukseen</Panel.Title>
+          </Panel.Heading>
+          <Panel.Body>
+            <form onSubmit={this.login}>
+              <FormGroup >
+                <ControlLabel>käyttäjätunnus</ControlLabel>
+                <FormControl type='text' name='username' />
+                <ControlLabel>salasana</ControlLabel>
+                <FormControl type='password' name='password' />
+              </FormGroup>
+              <Button bsStyle='success' type='submit'>kirjaudu</Button>
+            </form>
+          </Panel.Body>
+        </Panel>
       </div>
     )
   }

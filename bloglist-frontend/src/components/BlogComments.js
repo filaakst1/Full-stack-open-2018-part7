@@ -1,9 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import { Button, FormControl,FormGroup,ListGroup,ListGroupItem } from 'react-bootstrap'
+
 import commentService from '../services/comments'
 import { notify } from '../reducers/notificationReducer'
-
 class BlogComments extends React.Component {
   constructor() {
     super()
@@ -40,12 +41,17 @@ class BlogComments extends React.Component {
       <div>
         <h3>comments</h3>
         <form onSubmit={ this.addComment }>
-          <input type='text' name='comment' />
-          <button type='submit'>add comment</button>
+          <FormGroup >
+            <FormControl type='text' name='comment' placeholder="Enter comment"/>
+          </FormGroup>
+          <Button bsStyle='success' type='submit'>add comment</Button>
         </form>
-        <ul>
-          {comments.map(comment => <li key={comment._id}>{comment.comment}</li> )}
-        </ul>
+        <br />
+        < ListGroup >
+          {comments.map(comment =>
+            <ListGroupItem key={comment._id}  >{comment.comment}</ListGroupItem>
+          )}
+        </ListGroup>
       </div>
     )
   }

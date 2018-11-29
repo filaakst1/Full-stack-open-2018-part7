@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
-
+import { Table } from 'react-bootstrap'
 class UsersList extends React.Component {
 
   render() {
@@ -9,12 +9,22 @@ class UsersList extends React.Component {
     return (
       <div>
         <h2>users</h2>
-        <table id='userTable' >
-          <thead><tr><th></th><th>blogs added</th></tr></thead>
+        <Table striped bordered condensed hover>
+          <thead>
+            <tr>
+              <th></th>
+              <th>blogs added</th>
+            </tr>
+          </thead>
           <tbody>
-            { userBlogMap.map(item => <tr key={item.user.username}><td><NavLink  exact to={`/users/${item.user._id}`} >{item.user.name !== undefined? item.user.name: item.user.username}</NavLink></td><td>{item.blogs.length}</td></tr>) }
+            { userBlogMap.map(item =>
+              <tr key={item.user.username}>
+                <td><NavLink  exact to={`/users/${item.user._id}`} >{item.user.name !== undefined? item.user.name: item.user.username}</NavLink></td>
+                <td>{item.blogs.length}</td>
+              </tr>
+            )}
           </tbody>
-        </table>
+        </Table>
       </div>
     )
   }

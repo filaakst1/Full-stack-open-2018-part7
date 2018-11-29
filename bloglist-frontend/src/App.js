@@ -37,10 +37,10 @@ class App extends React.Component {
       <div className='container' >
         <Router>
           <div>
-            <Notification  />
             <h2>blog app</h2>
             <Menu />
-            <Togglable buttonLabel='uusi blogi'>
+            <Notification  />
+            <Togglable >
               <BlogForm />
             </Togglable>
             <Route exact path='/' render={() => <BlogList /> } />

@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { FormGroup, Button, Collapse,Well } from 'react-bootstrap'
 class Togglable extends React.Component {
   constructor(props) {
     super(props)
@@ -14,17 +14,21 @@ class Togglable extends React.Component {
 
   render() {
     const hideWhenVisible = { display: this.state.visible ? 'none' : '' }
-    const showWhenVisible = { display: this.state.visible ? '' : 'none' }
-
     return (
       <div>
         <div style={hideWhenVisible}>
-          <button onClick={this.toggleVisibility}>{this.props.buttonLabel}</button>
+          <Button bsStyle='success' onClick={this.toggleVisibility}>new blog</Button>
         </div>
-        <div style={showWhenVisible}>
-          {this.props.children}
-          <button onClick={this.toggleVisibility}>cancel</button>
-        </div>
+        <Collapse in={this.state.visible}>
+          <Well>
+            <div>
+              <FormGroup>
+                {this.props.children}
+              </FormGroup>
+              <Button onClick={this.toggleVisibility}>cancel</Button>
+            </div>
+          </Well>
+        </Collapse>
       </div>
     )
   }

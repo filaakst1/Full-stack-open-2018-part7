@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
+import { NavLink } from 'react-router-dom'
+import { ListGroup,ListGroupItem } from 'react-bootstrap'
 
 class UserBlogList extends React.Component {
 
@@ -13,9 +14,11 @@ class UserBlogList extends React.Component {
       <div>
         <h2>{user.name}</h2>
         <h3>Added blogs</h3>
-        <ul>
-          {blogs.filter(blog => blog.user._id === user._id).map(blog => <li key={blog._id}>{blog.title} by {blog.author}</li>)}
-        </ul>
+        < ListGroup >
+          {blogs.map(blog =>
+            <ListGroupItem key={blog._id}  ><NavLink exact to={`/blogs/${blog._id}`} >{blog.title} {blog.author}</NavLink></ListGroupItem>
+          )}
+        </ListGroup>
       </div>
     )
   }

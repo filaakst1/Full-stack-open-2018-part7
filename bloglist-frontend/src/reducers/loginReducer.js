@@ -40,7 +40,7 @@ export const login = ( username, password ) => {
     catch (exception) {
       dispatch({
         message : 'käyttäjätunnus tai salasana virheellinen',
-        messageType: 'error',
+        messageType: 'danger',
         type: 'NOTIFY'
       })
       setTimeout(() => {
