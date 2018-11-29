@@ -1,24 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
-
+import { ListGroup,ListGroupItem } from 'react-bootstrap'
 
 class BlogList extends React.Component {
   render() {
     const { blogs } = this.props
-    const blogStyle = {
-      paddingTop: 10,
-      paddingLeft: 2,
-      border: 'solid',
-      borderWidth: 1,
-      marginBottom: 5
-    }
     return (
-      blogs.map(blog =>
-        <div  key={blog._id} style={blogStyle}>
-          <NavLink  exact to={`/blogs/${blog._id}`} >{blog.title} {blog.author}</NavLink>
-        </div>
-      )
+      <div>
+        < ListGroup >
+          {blogs.map(blog =>
+            <ListGroupItem key={blog._id}  ><NavLink exact to={`/blogs/${blog._id}`} >{blog.title} {blog.author}</NavLink></ListGroupItem>
+          )}
+        </ListGroup>
+      </div>
     )
   }
 }
