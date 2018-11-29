@@ -42,6 +42,7 @@ class Blog extends React.Component {
     )
   }
 }
+
 const mapStateToProps = (state,ownProps) => {
   const blog = state.blogs.find(b => b._id === ownProps.blogId)
   return {
