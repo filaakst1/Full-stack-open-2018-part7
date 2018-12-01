@@ -1,6 +1,6 @@
 import axios from 'axios'
 import blogService from './blogs'
-const baseUrl = '/api/blogs'
+const baseUrl = BACKEND_URL + '/api/blogs'
 
 
 
