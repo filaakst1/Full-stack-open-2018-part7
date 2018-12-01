@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "ajv": "^6.6.1",
     "axios": "^0.17.1",
     "prop-types": "^15.6.2",
     "react": "^16.2.0",
@@ -18,17 +19,20 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build-old": "react-scripts build",
+    "build": "webpack --mode=development",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "proxy": "http://localhost:3003",
   "devDependencies": {
+    "babel-eslint": "^9.0.0",
     "babel-loader": "^8.0.4",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
-    "babel-eslint": "^9.0.0",
-    "eslint-plugin-jest": "^22.0.0"
+    "eslint-plugin-jest": "^22.0.0",
+    "webpack": "^4.26.1",
+    "webpack-cli": "^3.1.2"
   },
   "browserslist": [
     ">0.2%",
