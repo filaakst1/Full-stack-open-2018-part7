@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
     "ajv": "^6.6.1",
     "axios": "^0.17.1",
     "prop-types": "^15.6.2",
-    "react": "^16.2.0",
+    "react": "^16.6.3",
     "react-bootstrap": "^0.32.4",
-    "react-dom": "^16.2.0",
+    "react-dom": "^16.6.3",
     "react-redux": "^5.1.0",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.3.1",
@@ -18,17 +19,21 @@
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start-old": "react-scripts start",
     "build-old": "react-scripts build",
-    "build": "webpack --mode=development",
+    "start": "webpack-dev-server --mode=development",
+    "build": "webpack --mode=production",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "proxy": "http://localhost:3003",
   "devDependencies": {
+    "@babel/plugin-transform-regenerator": "^7.0.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^9.0.0",
     "babel-loader": "^8.0.4",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^1.0.1",
     "enzyme": "^3.7.0",
@@ -36,7 +41,8 @@
     "eslint-plugin-jest": "^22.0.0",
     "style-loader": "^0.23.1",
     "webpack": "^4.26.1",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
   },
   "browserslist": [
     ">0.2%",
