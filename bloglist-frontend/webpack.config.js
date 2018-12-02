@@ -5,7 +5,7 @@ const config = (env, argv) => {
   console.log('argv', argv.mode)
 
   const backend_url = argv.mode === 'production'
-    ? 'https://radiant-plateau-25399.herokuapp.com/api/notes'
+    ? 'https://filaakst1-full-stack-open-2018-part7-backend.now.sh'
     : 'http://localhost:3003'
   return {
     entry: ['@babel/polyfill','./src/index.js'],
