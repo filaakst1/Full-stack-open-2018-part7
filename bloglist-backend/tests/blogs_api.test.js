@@ -4,55 +4,23 @@ const api = supertest(app)
 
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const Comment = require('../models/comment')
-const { hashPasswd, initialBlogs, initialUsers, blogsInDb,usersInDb,commentsInDb } = require('./test_helper')
+const { initDataBase, initialBlogs, initialUsers, initialComments, blogsInDb,usersInDb,commentsInDb } = require('./test_helper')
 
 
 describe('when there is initially some blogs saved', async () => {
-  beforeAll(async () => {
-    await Comment.remove({})
-    await User.remove({})
-    await Blog.remove({})
+  beforeAll( async () => {
+    await initDataBase()
     const usersInDataBase =await usersInDb()
     const blogsInDataBase = await blogsInDb()
     const commentsInDataBase = await commentsInDb()
 
-    expect(usersInDataBase.length).toBe(0)
-    expect(blogsInDataBase.length).toBe(0)
-    expect(commentsInDataBase.length).toBe(0)
-
-    const toDataBase= initialUsers.map(user => {
-      const hash= hashPasswd(user.password)
-      return {
-        username: user.username,
-        name: user.name,
-        adult: user.adult,
-        passwordHash: hash
-      }
-    })
-
-    const userObjects = toDataBase.map(u => new User(u))
-    await Promise.all(userObjects.map(u => u.save()))
-    const usersInDataBaseAfterSave =await usersInDb()
-    expect(usersInDataBaseAfterSave.length).toBe(initialUsers.length)
-    const user = await User.findOne( { username: 'filaakst' })
-    const blogObjects = initialBlogs
-      .map(blog => {
-        blog.user = user
-        return blog
-      })
-      .map(blog => new Blog(blog))
-
-    const savedObjects = await Promise.all(blogObjects.map(blog => blog.save()))
-    savedObjects.forEach( obj => {
-      user.blogs = user.blogs.concat(obj._id)
-    })
-    await user.save()
+    expect(usersInDataBase.length).toBe(initialUsers.length)
+    expect(blogsInDataBase.length).toBe(initialBlogs.length)
+    expect(commentsInDataBase.length).toBe(initialComments.length)
   })
 
   describe('GET /api/blogs tests', async () => {
-
-    test('blogs are returned as json', async () => {
+    test('GET /api/blogs tests returns all blogs', async () => {
       const blogsInDataBase =await blogsInDb()
       const response = await api
         .get('/api/blogs')
@@ -66,7 +34,7 @@ describe('when there is initially some blogs saved', async () => {
     })
   })
 
-  describe('POST /api/blogs: add entry', async() => {
+  describe('POST /api/blogs tests', async() => {
     const testValidBlogEntry = async (newBlog) => {
       const login = await api
         .post('/api/login')
@@ -90,7 +58,6 @@ describe('when there is initially some blogs saved', async () => {
       const formattedBlogs = blogsAfterOperation.map(blog => blog.title)
       expect(formattedBlogs).toContainEqual(addedBlog.body.title)
     }
-
     const testInvalidBlogEntry = async (newBlog) => {
       const login = await api
         .post('/api/login')
@@ -152,57 +119,7 @@ describe('when there is initially some blogs saved', async () => {
       await testInvalidBlogEntry(newBlog)
     })
   })
-  describe('GET /api/blogs/:id/comments tests', async () => {
-
-    test('comments are returned as json', async () => {
-      const blog = await Blog.findOne( { title: 'First class tests' })
-      const commentsIn =await commentsInDb()
-      const response = await api
-        .get(`/api/blogs/${blog._id}/comments`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
-      expect(response.body.length).toBe(commentsIn.length)
-      const returnedContents = response.body.map(comment => comment.comment)
-      commentsIn.map(comment => comment.comment).forEach(comment => {
-        expect(returnedContents).toContainEqual(comment)
-      })
-    }) })
-
-  describe('POST /api/blogs/:id/comments tests', async () => {
-    test('posting valid data', async () => {
-      const blog = await Blog.findOne( { title: 'First class tests' })
-      const commentsBeforeAll = blog.comments
-      const login = await api
-        .post('/api/login')
-        .send({
-          username: 'filaakst',
-          password: 'verysecret'
-        })
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
-      const token = login.body.token
-      const comment = {
-        blog: blog,
-        comment: 'Hello World!'
-      }
-      const addedComment = await api
-        .post(`/api/blogs/${blog._id}/comments`)
-        .set({ Authorization: 'bearer ' + token })
-        .send(comment)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
-
-      const blogAfterSave = await Blog.findOne( { title: 'First class tests' })
-      const commentsAfterSave = blogAfterSave.comments
-
-      expect(commentsAfterSave.length).toBe(commentsBeforeAll.length + 1)
-
-      const comments = commentsAfterSave.map(comment => comment.comment)
-      expect(comments).toContainEqual(addedComment.comment)
-
-    })
-  })
-  describe('DELETE /api/blogs/:id - delete entry', async() => {
+  describe('DELETE /api/blogs/:id tests', async() => {
     let addedBlog
 
     beforeEach(async () => {
@@ -265,13 +182,9 @@ describe('when there is initially some blogs saved', async () => {
       expect(blogsAfterOperation.length).toBe(blogsAtStart.length)
     })
   })
-
-
-  describe('PUT /api/blogs/:id - update likes', async() => {
-
+  describe('PUT /api/blogs/:id tests', async() => {
     test('PUT /api/blogs/:id succeeds with valid request ', async () => {
       const blogsAtStart = await blogsInDb()
-
       const blogAtStart = blogsAtStart[0]
       const originalLikes = blogAtStart.likes
       const updatedLikes = originalLikes +1
@@ -312,116 +225,8 @@ describe('when there is initially some blogs saved', async () => {
         expect(blogsAtStart).toContainEqual(blog)
       })
     })
-  })
-
-  describe('when there is initially one user at db', async () => {
-
-    test('users are returned as json', async () => {
-      const usersInDataBase =await usersInDb()
-      const response = await api
-        .get('/api/users')
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
-      expect(response.body.length).toBe(usersInDataBase.length)
-
-      const returnedContents = response.body.map(u => u.username)
-
-      usersInDataBase.map(u => u.username).forEach(username => {
-        expect(returnedContents).toContainEqual(username)
-      })
-    })
-
-    test('POST /api/users succeeds with a fresh username', async () => {
-      const usersBeforeOperation = await usersInDb()
-      const newUser = {
-        username: 'test-user',
-        name: 'Test user',
-        password: 'salainen',
-        adult: true
-      }
-      await api
-        .post('/api/users')
-        .send(newUser)
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
-
-      const usersAfterOperation = await usersInDb()
-      expect(usersAfterOperation.length).toBe(usersBeforeOperation.length+1)
-      const usernames = usersAfterOperation.map(u => u.username)
-      expect(usernames).toContainEqual(newUser.username)
-    })
-
-    test('POST /api/users fails with proper statuscode and message if username already taken', async () => {
-      const usersBeforeOperation = await usersInDb()
-      const newUser = {
-        username: 'root',
-        name: 'Superuser',
-        password: 'salainen'
-      }
-      const result = await api
-        .post('/api/users')
-        .send(newUser)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-      expect(result.body).toEqual({ error: 'username must be unique' })
-      const usersAfterOperation = await usersInDb()
-      expect(usersAfterOperation.length).toBe(usersBeforeOperation.length)
-    })
-
-    test('POST /api/users fails with with password length less than 3', async () => {
-      const usersBeforeOperation = await usersInDb()
-      const newUser = {
-        username: 'new-user',
-        name: 'new user',
-        password: 'aa'
-      }
-      const result = await api
-        .post('/api/users')
-        .send(newUser)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-      expect(result.body).toEqual({ error: 'password too short' })
-      const usersAfterOperation = await usersInDb()
-      expect(usersAfterOperation.length).toBe(usersBeforeOperation.length)
-    })
-
-    test('POST /api/users fails with with password is undefined', async () => {
-      const usersBeforeOperation = await usersInDb()
-      const newUser = {
-        username: 'new-user',
-        name: 'new user',
-      }
-      const result = await api
-        .post('/api/users')
-        .send(newUser)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-      expect(result.body).toEqual({ error: 'password is missing' })
-      const usersAfterOperation = await usersInDb()
-      expect(usersAfterOperation.length).toBe(usersBeforeOperation.length)
-    })
-
-    test('POST /api/users defaults with adult if not set', async () => {
-      const usersBeforeOperation = await usersInDb()
-      const newUser = {
-        username: 'new-user',
-        name: 'new user',
-        password: 'verysecret'
-      }
-      const result = await api
-        .post('/api/users')
-        .send(newUser)
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
-      const usersAfterOperation = await usersInDb()
-      expect(usersAfterOperation.length).toBe(usersBeforeOperation.length+1)
-      expect(result.body.adult).toBe(true)
-    })
-
 
   })
-
-
   afterAll(() => {
     server.close()
   })
