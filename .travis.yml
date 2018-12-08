@@ -11,6 +11,5 @@ after_success:
   - rm -rf ./bloglist-backend/build
   - cp -r ./bloglist-frontend/build ./bloglist-backend
   - cd ./bloglist-backend
-  - now -C -f -e MONGO_DB_URI=@mongo-db-uri-e7 -e PORT=3003 -e SECRET=@login-secret-e7 -n filaakst-bloglist-part7 --token ${NOW_TOKEN}
-  - now alias --token ${NOW_TOKEN} filaakst-bloglist-part7
+  - now -C -f -e MONGO_DB_URI=@mongo-db-uri-e7 -e PORT=3003 -e SECRET=@login-secret-e7 -n filaakst-bloglist-part7 --token=$NOW_TOKEN
      
