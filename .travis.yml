@@ -2,10 +2,13 @@ language: node_js
 node_js:
   - "node"
 install:
-  - cd bloglist-backend && npm install && cd ..
-  - cd bloglist-frontend && npm install && cd ..
+  - cd ./bloglist-backend && npm install && cd ..
+  - cd ./bloglist-frontend && npm install && cd ..
 script:
-  - cd bloglist-backend && npm run test && cd ..
-  - cd bloglist-backend && npm run build && cd ..
-  - cd bloglist-frontend && npm run build-react && cd ..
+  - cd ./bloglist-backend && npm run test && cd ..
+  - cd ./bloglist-frontend && npm run build-react && cd ..
+after_success:
+  - rm -rf ./bloglist-backend/build
+  - cp -r ./bloglist-frontend/build ./bloglist-backend
+
 
