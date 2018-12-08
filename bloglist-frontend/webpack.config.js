@@ -5,7 +5,7 @@ const config = (env, argv) => {
   console.log('argv', argv.mode)
 
   const backend_url = argv.mode === 'production'
-    ? 'https://filaakst1-full-stack-open-2018-part7-backend.now.sh'
+    ? 'https://filaakst-bloglist-part7.now.sh'
     : 'http://localhost:3003'
   return {
     entry: ['@babel/polyfill','./src/index.js'],
@@ -17,6 +17,9 @@ const config = (env, argv) => {
       contentBase: path.resolve(__dirname, 'dist'),
       compress: true,
       port: 3000
+    },
+    node: {
+      fs: 'empty'
     },
     devtool: 'source-map',
     module: {
@@ -44,9 +47,9 @@ const config = (env, argv) => {
     },
     plugins: [
       new webpack.DefinePlugin({
-        BACKEND_URL: JSON.stringify(backend_url)
+        'process.env.BACKEND_URL': JSON.stringify(backend_url)
       })
-    ]    
+    ]
 
   }
 }

@@ -1,5 +1,6 @@
 import axios from 'axios'
-const baseUrl = BACKEND_URL + '/api/blogs'
+const utilsConfig = require('../utils/config')
+const baseUrl = `${utilsConfig.baseUrl}/api/blogs`
 
 let token = null
 

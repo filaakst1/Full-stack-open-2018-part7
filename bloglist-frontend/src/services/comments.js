@@ -1,8 +1,7 @@
 import axios from 'axios'
 import blogService from './blogs'
-const baseUrl = BACKEND_URL + '/api/blogs'
-
-
+const config = require('../utils/config')
+const baseUrl = `${config.baseUrl}/api/blogs`
 
 const getAll = (id) => {
   const request = axios.get(`${baseUrl}/${id}/comments`)

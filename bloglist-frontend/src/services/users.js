@@ -1,5 +1,6 @@
 import axios from 'axios'
-const baseUrl = BACKEND_URL + '/api/users'
+const config = require('../utils/config')
+const baseUrl = `${config.baseUrl}/api/users`
 
 const getAll = async () => {
   const response = await axios.get(baseUrl)

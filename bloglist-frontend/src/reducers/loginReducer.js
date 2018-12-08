@@ -30,6 +30,7 @@ export const login = ( username, password ) => {
         username: username,
         password: password
       })
+      console.log('logged in as ', user)
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
       dispatch({
