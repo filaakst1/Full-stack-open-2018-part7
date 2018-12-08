@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "node"
+
+install:
+  - cd bloglist-backend && npm install && cd ..
+  - cd bloglist-frontend && npm install && cd ..
+script:
+- cd bloglist-backend && npm test
