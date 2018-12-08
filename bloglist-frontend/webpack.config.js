@@ -5,7 +5,7 @@ const config = (env, argv) => {
   console.log('argv', argv.mode)
 
   const backend_url = argv.mode === 'production'
-    ? 'https://filaakst-bloglist-part7.now.sh'
+    ? 'https://filaakst-bloglist-part7.now.sh/'
     : 'http://localhost:3003'
   return {
     entry: ['@babel/polyfill','./src/index.js'],
