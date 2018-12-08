@@ -15,10 +15,6 @@ after_success:
   - cp -r ./bloglist-frontend/build ./bloglist-backend
 deploy:
   - cd ./bloglist-backend
-  - provider: script
-      script: 
-        - now -C -f -e MONGO_DB_URI=@mongo-db-uri-e7 -e PORT=${PORT} -e SECRET=@login-secret-e7 -n ${DEPLOYMENT_NAME} --token ${NOW_TOKEN}
-        - now alias --token ${NOW_TOKEN}
-      skip_cleanup: true
-      on:
-        master: true
+  - now -C -f -e MONGO_DB_URI=@mongo-db-uri-e7 -e PORT=${PORT} -e SECRET=@login-secret-e7 -n ${DEPLOYMENT_NAME} --token ${NOW_TOKEN}
+  - now alias --token ${NOW_TOKEN}
+     
