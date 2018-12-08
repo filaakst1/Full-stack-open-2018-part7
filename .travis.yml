@@ -1,6 +1,9 @@
 language: node_js
 node_js:
   - "node"
+env:
+  - "PORT=3003"
+  - "DEPLOYMENT_NAME=filaakst-bloglist-part7"
 install:
   - cd ./bloglist-backend && npm install && cd ..
   - cd ./bloglist-frontend && npm install && cd ..
@@ -10,5 +13,12 @@ script:
 after_success:
   - rm -rf ./bloglist-backend/build
   - cp -r ./bloglist-frontend/build ./bloglist-backend
-
-
+deploy:
+  - cd ./bloglist-backend
+  - provider: script
+      script: 
+        - now -C -f -e MONGO_DB_URI=@mongo-db-uri-e7 -e PORT=${PORT} -e SECRET=@login-secret-e7 -n ${DEPLOYMENT_NAME} --token ${NOW_TOKEN}
+        - now alias --token ${NOW_TOKEN}
+      skip_cleanup: true
+      on:
+        master: true
