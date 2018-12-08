@@ -35,6 +35,7 @@
     "eslint": "^5.9.0",
     "jest": "^23.6.0",
     "nodemon": "^1.18.7",
+    "now-travis": "^1.2.0",
     "supertest": "^3.3.0"
   },
   "jest": {
