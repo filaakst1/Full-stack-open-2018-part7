@@ -1,6 +1,8 @@
 language: node_js
 node_js:
-  - "node"
+ - "iojs"
+  - "7"
+
 env:
   - "PORT=3003"
   - "DEPLOYMENT_NAME=filaakst-bloglist-part7"
